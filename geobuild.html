@@ -11,6 +11,75 @@
         <script type="text/javascript"
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOJ3AIw6pGkJs_DuOkZT-Edc38k5inwL4&sensor=false">
         </script>
+	<script type="text/javascript">
+	var output;
+var permits = new Array();
+var ex;
+var why;
+function getLocation()
+  {
+  if (navigator.geolocation)
+    {
+    navigator.geolocation.getCurrentPosition(getPermits);
+    }
+  else{$('#Output').text="Geolocation is not supported by this browser.";}
+  }
+function getPermits(position){
+ex=position.coords.latitude;
+why=position.coords.longitude;
+$.ajax({
+        url:"http://maps.raleighnc.gov/arcgis/rest/services/Utilities/Geometry/GeometryServer/buffer",
+        dataType:"jsonp",
+        type:"POST",       
+        data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:position.coords.longitude,y:position.coords.latitude}]}),
+        //data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:-78.64,y:35.78}]}),
+        inSr:4326,
+        outSr:4326,
+        distances:"3000",
+        unit:9002,
+        f:"json"},
+        success:function(data){
+          $.ajax({
+            url:"http://maps.raleighnc.gov/arcgis/rest/services/Planning/Permit_History/MapServer/0/query",
+            type:"POST",
+            dataType:"json",
+            data:{
+              geometry:JSON.stringify(data.geometries[0]),
+              geometryType:"esriGeometryPolygon",
+              returnGeometry:true,
+              where:"1=1",
+              outFields:"*",
+              inSr:4326,
+              outSr:4326,
+              f:"json"
+            },
+ 
+            success:function(data){
+		for(var i=0; i < data.features.length; i++){
+			permit = new Object();
+			permit.x = data.features[i].geometry.x;
+			permit.y = data.features[i].geometry.y;
+			permit.address = data.features[i].attributes.ADDRESS;
+			permit.permitNumber = data.features[i].attributes.PERMIT_NUMBER;
+			permit.issueDate = "";
+			permit.contractor= "";
+			permit.description= "";
+			permit.units = "";
+			permit.owner = "";
+			permit.estimate = "";
+			permits.push(permit);
+		}
+	    output = data;
+            }
+          });
+        },
+        error:function(error){
+          alert(error);
+        }
+      });
+}
+
+	</script>
         <script type="text/javascript">
           function initialize() {
             var locations = [
@@ -23,7 +92,7 @@
 
             var map = new google.maps.Map(document.getElementById('map-canvas'), {
               zoom: 14,
-              center: new google.maps.LatLng(35.769290, -78.676634),
+              center: new google.maps.LatLng(ex, why),
               mapTypeId: google.maps.MapTypeId.ROADMAP
             });
 
@@ -31,9 +100,9 @@
             var bounds = new google.maps.LatLngBounds();
             var marker, i;
 
-            for (i = 0; i < locations.length; i++) {  
+            for (i = 0; i < permits.length; i++) {  
               marker = new google.maps.Marker({
-                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                position: new google.maps.LatLng(permits[i].y, permits[i].x),
                 map: map
               });
 
@@ -47,13 +116,12 @@
             $('aside').show();
 
           }
-          google.maps.event.addDomListener(window, 'load', initialize);
 
           var overlay = jQuery('<div id="overlay"> </div>');
           overlay.appendTo(document.body)
         </script>
     </head>
-    <body onload="initialize()">
+    <body onload="getLocation(); setTimeout(initialize,4000)">
         <header>
             <h1>
                 <img src="img/logo.png" />
