@@ -74,7 +74,6 @@
 	<div id="Output"></div>
 
 <script>
-permits = new Object[];
 var output;
 var ex;
 var why;
