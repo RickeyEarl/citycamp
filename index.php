@@ -1,1 +1,1 @@
-<?php echo "potato" ?>
+<meta http-equiv="refresh" content="0; url=pages/home.php"> 
