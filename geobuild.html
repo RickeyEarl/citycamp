@@ -14,11 +14,11 @@
         <script type="text/javascript">
           function initialize() {
             var locations = [
-              ['Point5', 35.769100, -78.676300, 4],
-              ['Point4', 35.769200, -78.676400, 5],
-              ['Point3', 35.769300, -78.676500, 3],
-              ['Point2', 35.769400, -78.676600, 2],
-              ['Point1', 35.769500, -78.676700, 1]
+              ['Rogers, Marcia G', 35.776126, -78.670940, 5],
+              ['Oneal, Verrone Nicosia Sr', 35.774551, -78.678137, 4],
+              ['Gongaware, Thomas A & Pamela L Kohl', 35.772440, -78.680585, 3],
+              ['Cobb, James L & Brenda D', 35.769115, -78.678808, 2],
+              ['Claerhout, Susan J', 35.773054, -78.673898, 1]
             ];
 
             var map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -48,6 +48,9 @@
 
           }
           google.maps.event.addDomListener(window, 'load', initialize);
+
+          var overlay = jQuery('<div id="overlay"> </div>');
+          overlay.appendTo(document.body)
         </script>
     </head>
     <body onload="initialize()">
@@ -94,28 +97,36 @@
                         <th>Work</th>
                         <th>Date</th>
                         <th>Cost</th>
-                        <th>Other</th>
                     </tr>
                     <tr>
-                        <td>Contractor1</td>
-                        <td>Bathroom remodel</td>
-                        <td>09/13/12</td>
-                        <td>$15,0000</td>
-                        <td>[blank]</td>
+                        <td><a href="#">Blue Sky Services</a></td>
+                        <td>Residential Addition/alteration</td>
+                        <td>02/22/13</td>
+                        <td>$82,043</td>
                     </tr>
                     <tr>
-                        <td>Contractor2</td>
-                        <td>Kitchen remodel</td>
-                        <td>06/05/12</td>
-                        <td>$25,0000</td>
-                        <td>[blank]</td>
+                        <td><a href="#">Byron Mitchell Builders, Inc</a></td>
+                        <td>Deck Replacement</td>
+                        <td>02/26/13</td>
+                        <td>$15,000</td>
                     </tr>
                     <tr>
-                        <td>Contractor3</td>
-                        <td>Bathroom remodel</td>
-                        <td>09/13/12</td>
-                        <td>$15,0000</td>
-                        <td>[blank]</td>
+                        <td><a href="#">Milewski Construction Llc</a></td>
+                        <td>Kitchen and Bath Remodel</td>
+                        <td>02/27/13</td>
+                        <td>$38,000</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">John C Sanders & Co, Llc</a></td>
+                        <td>Inline Hot Water Heater</td>
+                        <td>02/25/13</td>
+                        <td>$1,000</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Milewski Construction Llc</a></td>
+                        <td>Kitchen and Bath Remodel</td>
+                        <td>02/20/13</td>
+                        <td>$10,000</td>
                     </tr>
                 </table>
             </aside>

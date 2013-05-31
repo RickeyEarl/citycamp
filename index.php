@@ -1,1 +1,1 @@
-<meta http-equiv="refresh" content="0; url=pages/home.php"> 
+<meta http-equiv="refresh" content="0; url=geobuild.html"> 
