@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html lang="en">
 	<head>
     <meta charset="utf-8">
@@ -60,15 +61,13 @@
 
     <div class="container">
 
+	<div class="input-append">
       <form class="form-signin">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="text" class="input-block-level" placeholder="Email address">
-        <input type="password" class="input-block-level" placeholder="Password">
-        <label class="checkbox">
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-        <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+        <input type="text" class="input-block-level" placeholder="Address">
+        <button class="btn btn-large btn-primary" type="submit"><i class="icon-search icon-white"></i></button>
       </form>
+	</div>
 
     </div> <!-- /container -->
 
