@@ -74,15 +74,31 @@
 	<div id="Output"></div>
 
 <script>
+permits = new Object[];
 var output;
+var ex;
+var why;
+$(document).load(getLocation());
+function getLocation()
+  {
+  if (navigator.geolocation)
+    {
+    navigator.geolocation.getCurrentPosition(getPermits);
+    }
+  else{$('#Output').text="Geolocation is not supported by this browser.";}
+  }
+function getPermits(position){
+ex=position.coords.latitude;
+why=position.coords.longitude;
 $.ajax({
         url:"http://maps.raleighnc.gov/arcgis/rest/services/Utilities/Geometry/GeometryServer/buffer",
         dataType:"jsonp",
         type:"POST",       
-        data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:-78.64,y:35.78}]}),
+        data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:position.coords.longitude,y:position.coords.latitude}]}),
+        //data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:-78.64,y:35.78}]}),
         inSr:4326,
         outSr:4326,
-        distances:"100000",
+        distances:"3000",
         unit:9002,
         f:"json"},
         success:function(data){
@@ -101,9 +117,11 @@ $.ajax({
             },
  
             success:function(data){
+		for(var i=0; i < data.features.length; i++){
+			permit = new Object();
+			permit.x = data.features;
+		}
 	    output = data;
-	    $('#Output').text(output);
-             
             }
           });
         },
@@ -111,6 +129,7 @@ $.ajax({
           alert(error);
         }
       });
+}
 </script>
     </div> <!-- /container -->
 
