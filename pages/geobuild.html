@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>GeoBuild</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../css/normalize.css">
+        <link rel="stylesheet" href="../css/main.css">
+        <script src="../assets/js/jQuery.js"></script>
+        <script type="text/javascript"
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOJ3AIw6pGkJs_DuOkZT-Edc38k5inwL4&sensor=false">
+        </script>
+        <script type="text/javascript">
+var output;
+var permits = new Array();
+var myX;
+var myY;
+$(document).load(getLocation());
+function getLocation()
+  {
+  if (navigator.geolocation)
+    {
+    navigator.geolocation.getCurrentPosition(getPermits);
+    }
+  else{$('#Output').text="Geolocation is not supported by this browser.";}
+  }
+function getPermits(position){
+myX=position.coords.latitude;
+myY=position.coords.longitude;
+$.ajax({
+        url:"http://maps.raleighnc.gov/arcgis/rest/services/Utilities/Geometry/GeometryServer/buffer",
+        dataType:"jsonp",
+        type:"POST",       
+        data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:position.coords.longitude,y:position.coords.latitude}]}),
+        //data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:-78.64,y:35.78}]}),
+        inSr:4326,
+        outSr:4326,
+        distances:"3000",
+        unit:9002,
+        f:"json"},
+        success:function(data){
+          $.ajax({
+            url:"http://maps.raleighnc.gov/arcgis/rest/services/Planning/Permit_History/MapServer/0/query",
+            type:"POST",
+            dataType:"json",
+            data:{
+              geometry:JSON.stringify(data.geometries[0]),
+              geometryType:"esriGeometryPolygon",
+              returnGeometry:true,
+              where:"1=1",
+              outFields:"*",
+              inSr:4326,
+              outSr:4326,
+              f:"json"
+            },
+ 
+            success:function(data){
+		for(var i=0; i < data.features.length; i++){
+			permit = new Object();
+			permit.x = data.features[i].geometry.x;
+			permit.y = data.features[i].geometry.y;
+			permit.address = data.features[i].attributes.ADDRESS;
+			permit.permitNumber = data.features[i].attributes.PERMIT_NUMBER;
+			permit.issueDate = "";
+			permit.contractor= "";
+			permit.description= "";
+			permit.units = "";
+			permit.owner = "";
+			permit.estimate = "";
+			permits.push(permit);
+		}
+	    output = data;
+      //getPermitNumber(data);
+            }
+          });
+        },
+        error:function(error){
+          alert(error);
+        }
+      });
+}
+          function initialize() {
+            var locations = [
+              ['Point5', 35.769100, -78.676300, 4],
+              ['Point4', 35.769200, -78.676400, 5],
+              ['Point3', 35.769300, -78.676500, 3],
+              ['Point2', 35.769400, -78.676600, 2],
+              ['Point1', 35.769500, -78.676700, 1]
+            ];
+
+            var map = new google.maps.Map(document.getElementById('map-canvas'), {
+              zoom: 14,
+              center: new google.maps.LatLng(myX, myY),
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+            var infowindow = new google.maps.InfoWindow();
+            var bounds = new google.maps.LatLngBounds();
+            var marker, i;
+
+            for (i = 0; i < locations.length; i++) {  
+              marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map
+              });
+
+              google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                  infowindow.setContent(locations[i][0]);
+                  infowindow.open(map, marker);
+                }
+              })(marker, i)); 
+            }
+            $('aside').show();
+
+          }
+          google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    </head>
+    <body onload="initialize()">
+        <header>
+            <h1>
+                <img src="../img/logo.png" />
+            </h1>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <input type="search" placeholder="Enter another address"/>
+                </li>
+                <!-- <li>
+                    <select>
+                        <option disabled>Room</option>
+                        <option>Kitchen</option>
+                        <option>Bathroom</option>
+                        <option>Bedroom</option>
+                        <option>Room4</option>
+                        <option>Room5</option>
+                    </select>
+                </li>
+                <li>
+                    <select>
+                        <option disabled>Type</option>
+                        <option>Renovation</option>
+                        <option>Addition</option>
+                        <option>Installation</option>
+                        <option>Type4</option>
+                        <option>Type5</option>
+                    </select>
+                </li> -->
+            </ul>
+        </nav>
+        <article>
+            <section>
+                <div id="map-canvas"></div>
+            </section>
+            <aside style="display:none;">
+                <table>
+                    <tr>
+                        <th>Contractor</th>
+                        <th>Work</th>
+                        <th>Date</th>
+                        <th>Cost</th>
+                        <th>Other</th>
+                    </tr>
+                    <tr>
+                        <td>Contractor1</td>
+                        <td>Bathroom remodel</td>
+                        <td>09/13/12</td>
+                        <td>$15,0000</td>
+                        <td>[blank]</td>
+                    </tr>
+                    <tr>
+                        <td>Contractor2</td>
+                        <td>Kitchen remodel</td>
+                        <td>06/05/12</td>
+                        <td>$25,0000</td>
+                        <td>[blank]</td>
+                    </tr>
+                    <tr>
+                        <td>Contractor3</td>
+                        <td>Bathroom remodel</td>
+                        <td>09/13/12</td>
+                        <td>$15,0000</td>
+                        <td>[blank]</td>
+                    </tr>
+                </table>
+            </aside>
+        </article>
+        <footer></footer>
+    </body>
+</html>
