@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="en">
 	<head>
+
+    <script src="../assets/js/jQuery.js"></script>
     <meta charset="utf-8">
     <title>Sign in · Twitter Bootstrap</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +11,7 @@
 
     <!-- Le styles -->
     <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <link href="../assets/css/main.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 40px;
@@ -61,20 +64,57 @@
 
     <div class="container">
 
-	<div class="input-append">
-      <form class="form-signin">
+	<div class="span2 offset4 input-append">
+      <form name="address">
         <h2 class="form-signin-heading">Please sign in</h2>
         <input type="text" class="input-block-level" placeholder="Address">
-        <button class="btn btn-large btn-primary" type="submit"><i class="icon-search icon-white"></i></button>
+        <button class="btn btn-primary" type="submit"><i class="icon-search icon-white"></i></button>
       </form>
 	</div>
+	<div id="Output"></div>
 
+<script>
+$.ajax({
+        url:"http://maps.raleighnc.gov/arcgis/rest/services/Utilities/Geometry/GeometryServer/buffer",
+        dataType:"jsonp",
+        type:"POST",       
+        data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:-78.64,y:35.78}]}),
+        inSr:4326,
+        outSr:4326,
+        distances:"1000",
+        unit:9002,
+        f:"json"},
+        success:function(data){
+          $.ajax({
+            url:"http://maps.raleighnc.gov/arcgis/rest/services/Planning/Permit_History/MapServer/0/query",
+            type:"POST",
+            dataType:"json",
+            data:{
+              geometry:JSON.stringify(data.geometries[0]),
+              geometryType:"esriGeometryPolygon",
+              returnGeometry:true,
+              where:"1=1",
+              outFields:"*",
+              inSr:4326,
+              f:"json"
+            },
+ 
+            success:function(data){
+	    $('#Output').text(data.geometries);
+             
+            }
+          });
+        },
+        error:function(error){
+          alert(error);
+        }
+      });
+</script>
     </div> <!-- /container -->
 
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../assets/js/jquery.js"></script>
     <script src="../assets/js/bootstrap-transition.js"></script>
     <script src="../assets/js/bootstrap-alert.js"></script>
     <script src="../assets/js/bootstrap-modal.js"></script>
