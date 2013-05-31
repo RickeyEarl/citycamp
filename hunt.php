@@ -3,7 +3,7 @@
 // This is the same info you need even if you're using the old mysql_ library.
 $host = 'localhost	';
 $port = 3306; // This is the default port for MySQL
-$database = 'citycamp';
+$database = 'geobuild';
 $username = 'root';
 $password = 'admin';
 

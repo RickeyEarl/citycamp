@@ -3,6 +3,7 @@
 	<head>
 
     <script src="../assets/js/jQuery.js"></script>
+    <script src="../assets/js/geoBuild.js"></script>
     <meta charset="utf-8">
     <title>Sign in · Twitter Bootstrap</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,6 +122,7 @@ $.ajax({
 			permit.x = data.features;
 		}
 	    output = data;
+      getPermitNumber(data);
             }
           });
         },
