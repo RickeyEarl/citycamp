@@ -108,7 +108,7 @@ $.ajax({
 
               google.maps.event.addListener(marker, 'click', (function(marker, i) {
                 return function() {
-                  infowindow.setContent(locations[i][0]);
+                  infowindow.setContent("Permit#: " + permits[i].permitNumber+ "<br><br>" + permits[i].address);
                   infowindow.open(map, marker);
                 }
               })(marker, i)); 
