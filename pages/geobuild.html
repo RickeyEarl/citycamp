@@ -16,7 +16,6 @@ var output;
 var permits = new Array();
 var myX;
 var myY;
-$(document).load(getLocation());
 function getLocation()
   {
   if (navigator.geolocation)
@@ -81,6 +80,7 @@ $.ajax({
       });
 }
           function initialize() {
+	  getLocation();
             var locations = [
               ['Point5', 35.769100, -78.676300, 4],
               ['Point4', 35.769200, -78.676400, 5],
@@ -91,7 +91,7 @@ $.ajax({
 
             var map = new google.maps.Map(document.getElementById('map-canvas'), {
               zoom: 14,
-              center: new google.maps.LatLng(myX, myY),
+              center: new google.maps.LatLng(myY, myX),
               mapTypeId: google.maps.MapTypeId.ROADMAP
             });
 
