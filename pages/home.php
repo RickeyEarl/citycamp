@@ -74,6 +74,7 @@
 	<div id="Output"></div>
 
 <script>
+var output;
 $.ajax({
         url:"http://maps.raleighnc.gov/arcgis/rest/services/Utilities/Geometry/GeometryServer/buffer",
         dataType:"jsonp",
@@ -81,7 +82,7 @@ $.ajax({
         data:{geometries:JSON.stringify({geometryType:"esriGeometryPoint",geometries:[{x:-78.64,y:35.78}]}),
         inSr:4326,
         outSr:4326,
-        distances:"1000",
+        distances:"100000",
         unit:9002,
         f:"json"},
         success:function(data){
@@ -100,7 +101,8 @@ $.ajax({
             },
  
             success:function(data){
-	    $('#Output').text(data.geometries);
+	    output = data;
+	    $('#Output').text(output);
              
             }
           });
