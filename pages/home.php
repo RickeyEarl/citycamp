@@ -75,6 +75,7 @@
 
 <script>
 var output;
+var permits = new Array();
 var ex;
 var why;
 $(document).load(getLocation());
@@ -112,13 +113,24 @@ $.ajax({
               where:"1=1",
               outFields:"*",
               inSr:4326,
+              outSr:4326,
               f:"json"
             },
  
             success:function(data){
 		for(var i=0; i < data.features.length; i++){
 			permit = new Object();
-			permit.x = data.features;
+			permit.x = data.features[i].geometry.x;
+			permit.y = data.features[i].geometry.y;
+			permit.address = data.features[i].attributes.ADDRESS;
+			permit.permitNumber = data.features[i].attributes.PERMIT_NUMBER;
+			permit.issueDate = "";
+			permit.contractor= "";
+			permit.description= "";
+			permit.units = "";
+			permit.owner = "";
+			permit.estimate = "";
+			permits.push(permit);
 		}
 	    output = data;
             }
